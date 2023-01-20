@@ -2,6 +2,8 @@ package com.tarcisio.crudspring.controller;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,19 +15,36 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.tarcisio.crudspring.model.Curso;
 import com.tarcisio.crudspring.repository.CursoRepository;
-
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("api/cursos")
 @AllArgsConstructor // Importando o construtor, opção do Lombok
 public class CursoController {
+
+  //Configurando CORS
+  @Configuration
+public class CorsConfiguration implements WebMvcConfigurer {
+
+  @Bean
+  public WebMvcConfigurer corsConfigurer() {
+      return new WebMvcConfigurer() {
+  
+          @Override
+          public void addCorsMappings(CorsRegistry registry) {
+              registry.addMapping("/**")
+                      .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE")
+                      .allowedHeaders("*")
+                      .allowedOrigins("*");
+          }
+      };
+  }
+}
 
     private CursoRepository cursoRepository;// Injetando o CursoRpositopry no controller
 
